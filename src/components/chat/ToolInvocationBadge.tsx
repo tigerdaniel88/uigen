@@ -1,16 +1,16 @@
 "use client";
 
-import { ToolInvocation } from "ai";
+import { DynamicToolUIPart } from "ai";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function getToolMessage(toolName: string, args: Record<string, unknown>): string {
-  const path = typeof args?.path === "string" ? args.path : null;
+export function getToolMessage(toolName: string, input: Record<string, unknown>): string {
+  const path = typeof input?.path === "string" ? input.path : null;
   const filename = path ? path.split("/").pop() || path : null;
 
   if (toolName === "str_replace_editor") {
     if (!filename) return toolName;
-    switch (args?.command) {
+    switch (input?.command) {
       case "create": return `Creating ${filename}`;
       case "str_replace": return `Editing ${filename}`;
       case "insert": return `Editing ${filename}`;
@@ -21,10 +21,10 @@ export function getToolMessage(toolName: string, args: Record<string, unknown>):
 
   if (toolName === "file_manager") {
     if (!filename) return toolName;
-    switch (args?.command) {
+    switch (input?.command) {
       case "delete": return `Deleting ${filename}`;
       case "rename": {
-        const newPath = typeof args?.new_path === "string" ? args.new_path : null;
+        const newPath = typeof input?.new_path === "string" ? input.new_path : null;
         const newFilename = newPath ? newPath.split("/").pop() || newPath : null;
         return newFilename ? `Renaming ${filename} → ${newFilename}` : `Renaming ${filename}`;
       }
@@ -35,13 +35,13 @@ export function getToolMessage(toolName: string, args: Record<string, unknown>):
 }
 
 interface ToolInvocationBadgeProps {
-  toolInvocation: ToolInvocation;
+  part: DynamicToolUIPart;
 }
 
-export function ToolInvocationBadge({ toolInvocation }: ToolInvocationBadgeProps) {
-  const { toolName, args, state } = toolInvocation;
-  const message = getToolMessage(toolName, args as Record<string, unknown>);
-  const isDone = state === "result" && "result" in toolInvocation && toolInvocation.result;
+export function ToolInvocationBadge({ part }: ToolInvocationBadgeProps) {
+  const { toolName, input, state } = part;
+  const message = getToolMessage(toolName, input as Record<string, unknown>);
+  const isDone = state === "output-available" && "output" in part && part.output;
 
   return (
     <div className={cn(

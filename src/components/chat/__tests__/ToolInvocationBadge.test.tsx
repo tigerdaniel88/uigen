@@ -79,11 +79,12 @@ describe("ToolInvocationBadge", () => {
   test("shows message in in-progress state", () => {
     render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "1",
           toolName: "str_replace_editor",
-          args: { command: "create", path: "/src/Card.jsx" },
-          state: "call",
+          input: { command: "create", path: "/src/Card.jsx" },
+          state: "input-available",
         }}
       />
     );
@@ -93,12 +94,13 @@ describe("ToolInvocationBadge", () => {
   test("shows message in completed state", () => {
     render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "1",
           toolName: "str_replace_editor",
-          args: { command: "str_replace", path: "/src/App.tsx" },
-          state: "result",
-          result: "OK",
+          input: { command: "str_replace", path: "/src/App.tsx" },
+          state: "output-available",
+          output: "OK",
         }}
       />
     );
@@ -108,11 +110,12 @@ describe("ToolInvocationBadge", () => {
   test("shows spinner when in-progress", () => {
     const { container } = render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "1",
           toolName: "str_replace_editor",
-          args: { command: "create", path: "/src/Card.jsx" },
-          state: "call",
+          input: { command: "create", path: "/src/Card.jsx" },
+          state: "input-available",
         }}
       />
     );
@@ -123,12 +126,13 @@ describe("ToolInvocationBadge", () => {
   test("shows green dot when completed", () => {
     const { container } = render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "1",
           toolName: "file_manager",
-          args: { command: "delete", path: "/src/old.js" },
-          state: "result",
-          result: "OK",
+          input: { command: "delete", path: "/src/old.js" },
+          state: "output-available",
+          output: "OK",
         }}
       />
     );
@@ -139,11 +143,12 @@ describe("ToolInvocationBadge", () => {
   test("shows file_manager delete message", () => {
     render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "2",
           toolName: "file_manager",
-          args: { command: "delete", path: "/src/old.js" },
-          state: "call",
+          input: { command: "delete", path: "/src/old.js" },
+          state: "input-available",
         }}
       />
     );
@@ -153,11 +158,12 @@ describe("ToolInvocationBadge", () => {
   test("falls back to toolName for unknown tools", () => {
     render(
       <ToolInvocationBadge
-        toolInvocation={{
+        part={{
+          type: "dynamic-tool",
           toolCallId: "3",
           toolName: "unknown_tool",
-          args: {},
-          state: "call",
+          input: {},
+          state: "input-available",
         }}
       />
     );
